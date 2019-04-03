@@ -1,0 +1,128 @@
+---
+title: "Lab 2: Vectors and other data structures"
+author: Rocky Lubbers
+date: 9/7/18
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data Objects
+
+```{r}
+# load data in your R session
+load('nba2018-salary-points.RData')
+length(player)
+head(player)
+tail(player)
+summary(player)
+##
+length(salary)
+head(salary)
+tail(salary)
+summary(salary)
+##
+length(experience)
+head(experience)
+tail(experience)
+summary(experience)
+```
+## Inspecting the data objects
+Do all the chosen objects have the same length?  
+- All of the chosen objects have the same length.     
+Are there missing values, i.e. NA, in any of the objects?  
+- In the objects I chose, there are no missisng (N/A) values.  
+Find out what is the class of each of the chosen objects.  
+- The class of the *player* object is **character**.  
+- The class of the *salary* object is **numeric**.  
+- The class of the *experience* object is **character**.  
+How do you know if any of the loaded objects is a vector?   
+- You use the **is.vector()** function.  
+How do you know that a given vector is of a certain data type?  
+- You use the **mode()** function.  
+
+---  
+
+## Manipulating Vectors: Subsetting
+```{r}
+four <- head(player, n = 4)
+four[1] # gets first player in vector
+four[0] # n/a (does not index, rather gets the data type)
+four[-1] # omits first item in vector
+four[-c(1,2,3)] # omits everything but the last (= to using negative indices on the first 3 itmes)
+four[5] # N/A (no item at this index)
+four[c(1,2,2,3,3,3)] # repeats the indexed items as many times as it is called in the vector 
+```
+
+---  
+```{r}
+player[c(seq(from=2, to=length(player), by=2))] #all the even elements in player
+salary[c(seq(from=1, to=length(salary), by=2))] #all the odd elements in salary
+team[c(seq(from=5, to=length(team), by=5))] #all multiples of 5 (e.g. 5, 10, 15, etc) of team
+scored[c(seq(from=10, to=length(scored), by=10))] #elements in positions 10, 20, 30, 40, etc of scored
+rev(team[c(seq(from=2, to=length(team), by=2))])#all the even elements in team but this time in reverse order
+```
+---  
+
+## Logical Subsetting
+```{r}
+player[team == 'GSW' & position == 'C']  # players in position Center, of Warriors (GSW)
+player[team == 'GSW' | team == 'LAL'] # players of both GSW (warriors) and LAL (lakers)
+player[team == 'LAL' & (position == 'SG'| position == 'PG') ] #players in positions Shooting Guard and Point Guards LAL
+player[team == 'GSW' | team == 'LAL' & position == 'SF'] # subset Small Forwards of GSW and LAL
+player[which.max(salary)] # name of the player with largest salary
+player[which.min(salary)] # name of the player with smallest salary
+player[which.max(scored)] # name of the player with largest number of scored points
+salary[which.max(scored)] #salary of the player with largest number of points
+max(salary[position =='C']) #largest salary of all Centers
+team[which.max(scored)] #team of the player with the largest number of scored points
+player[which.max(points3)] #name of the player with the largest number of 3-pointers
+```
+---  
+
+## Subsetting with Character Vectors
+```{r}
+library(plotly)
+warriors_player = player[team=='GSW']
+warriors_salary = salary[team=='GSW']
+warriors_points = scored[team=='GSW']
+names(warriors_salary) = warriors_player
+
+# Raw Value Plot
+plot(warriors_points, warriors_salary)
+text(warriors_points, warriors_salary, labels = abbreviate(warriors_player))
+
+#Log scored plot
+log_scored <- log(warriors_points)
+log_salary <- log(warriors_salary)
+plot(log_scored, log_salary)
+text(log_scored, log_salary, labels = abbreviate(warriors_player))
+```
+---  
+
+## Recycling
+```{r}
+salary_millions = salary / 1000000
+scored_points = c(points1 * 1 + points2 * 2 + points3 * 3)
+scored_points #scored points is the same as scored
+```
+---  
+
+## Factors
+```{r}
+position_fac <- factor(position)
+position_fac[team == 'GSW'] #positions of Warriors
+position_fac[salary > 15000000] #positions of players with salaries > 15 millions
+table(position_fac[salary > 15000000]) #frequencies (counts) of positions with salaries > 15 millions
+table(team[position == "SG"]) #relative frequencies (proportions) of ‘SG’ (Shooting Guards) in each team
+```
+---  
+
+## More Plots
+```{r}
+plot(scored, salary, col=position_fac, cex = 0.5)
+```
+---  

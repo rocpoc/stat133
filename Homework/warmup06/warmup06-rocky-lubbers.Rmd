@@ -1,0 +1,219 @@
+---
+title: "Warmup 06"
+output: html_document
+author: "Rocky Lubbers"
+date: "10/16/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+```
+
+```{r}
+#' @title Is Integer
+#' @description tests if a numeric value can be considered to be an integer 
+#' @param x numeric value
+#' @return TRUE if input is integer, FALSE if input is not an integer
+is_integer = function(x) {
+  if(x %% 1 == 0) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+# TRUE's
+is_integer(-1)
+is_integer(0)
+is_integer(2L)
+is_integer(2)
+# FALSE's
+is_integer(2.1)
+is_integer(pi)
+is_integer(0.01)
+```
+
+```{r}
+#' @title Is Positive
+#' @description tests if a numeric value is a positive number
+#' @param x numeric value
+#' @return TRUE if input is positive, FALSE if input is negative
+is_positive = function(x) {
+  if(x > 0) {
+    return(TRUE)
+  } else if(x <= 0) {
+    return(FALSE)
+  }
+}
+# TRUE's
+is_positive(0.01)
+is_positive(2)
+# FALSE's
+is_positive(-2)
+is_positive(0)
+```
+
+```{r}
+#' @title Is Nonnegative
+#' @description tests if a numeric value is a non-negative number
+#' @return TRUE if input is non-negative, FALSE otherwise
+is_nonnegative = function(x) {
+  if(x >= 0) {
+    return(TRUE)
+  } else if(x < 0) {
+    return(FALSE)
+  }
+}
+# TRUE's
+is_nonnegative(0)
+is_nonnegative(2)
+# FALSE's
+is_nonnegative(-0.00001)
+is_nonnegative(-2)
+```
+
+```{r}
+#' @title Is Positive Integer
+#' @description tests if a numeric value is a positive integer
+#' @param x numeric value
+#' @return TRUE if input is a positive integer, FALSE if input otherwise
+is_positive_integer = function(x) {
+  if(is_positive(x) & is_integer(x)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+# TRUE
+is_positive_integer(2)
+is_positive_integer(2L)
+# FALSE
+is_positive_integer(0)
+is_positive_integer(-2)
+```
+
+```{r}
+#' @title Is Nonnegative Integer
+#' @description tests if a numeric value is a non-negative integer
+#' @return TRUE if input is a non-negative integer, FALSE otherwise
+is_nonneg_integer = function(x) {
+  if(is_nonnegative(x) & is_integer(x)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+# TRUE's
+is_nonneg_integer(0)
+is_nonneg_integer(1)
+# FALSE
+is_nonneg_integer(-1)
+is_nonneg_integer(-2.5)
+```
+
+```{r}
+#' @title Is Probability 
+#' @description tests if a given number p is a valid probability value (0 ≤ p ≤ 1)
+#' @param p a numeric value
+#' @return TRUE if the input is a valid probability, FALSE otherwise
+is_probability = function(p) {
+  if(p >= 0 & p <= 1) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+# TRUE's
+is_probability(0)
+is_probability(0.5)
+is_probability(1)
+# FALSE's
+is_probability(-1)
+is_probability(1.0000001)
+```
+
+```{r}
+#' @title Bin Factorial
+#' @description calculates the factorial of the input n
+#' @param n a nonnegative integer
+#' @return f the factorial of n
+bin_factorial = function(n) {
+  if(n == 0) {
+    return(1)
+  } else {
+    f = 1
+    for (i in 1:n) {
+      f = f * i
+    }
+    return(f)
+  }
+}
+# valid
+bin_factorial(5)
+bin_factorial(0)
+```
+
+```{r}
+#' @title Bin Combinations
+#' @description calculates the number of combinations in which k successes can occur in n trials
+#' @param n numeric, trials
+#' @param k numeric, successes
+#' @return n choose k
+bin_combinations = function(n, k) {
+  return(bin_factorial(n) / (bin_factorial(k) * bin_factorial(n-k)))
+}
+bin_combinations(n = 5, k = 2)
+bin_combinations(10, 3)
+bin_combinations(4, 4)
+```
+
+```{r}
+#' @title Bin Probability
+#' @description calculates binomial probability with given trialss, success, and probability
+#' @param trials, numeric number of trials
+#' @param success, numeric number of successes
+#' @param prob, numeric prob of success
+#' @return binomial probability 
+bin_probability = function(trials, success, prob) {
+  if(is_nonneg_integer(trials) == FALSE){
+    stop("invalid trials value")
+  } else if(is_nonneg_integer(success) == FALSE) {
+    stop("invalid success value")
+  } else if(is_probability(prob) == FALSE) {
+    stop("invalid prob value")
+  } else if(success > trials) {
+    stop("success exceeds trials")
+  } else {
+    return(bin_combinations(trials, success) * prob^success * (1 - prob)^(trials - success))
+  }
+}
+# bad trials
+bin_probability(trials = 0, success = 2, prob = 0.5)
+# bad success
+bin_probability(trials = 5, success = 2.5, prob = 0.5)
+# success > trials
+bin_probability(trials = 5, success = 6, prob = 0.5)
+# bad prob
+bin_probability(trials = 5, success = 2, prob = -0.5)
+# 55 heads in 100 tosses of a loaded coin with 45% chance of heads
+bin_probability(trials = 100, success = 55, prob = 0.45)
+```
+
+```{r}
+#' @title Bin Distribution
+#' @description creates a probability distribution of binomial probability
+#' @param trials, numeric number of trials
+#' @param prob, numeric prob of success
+#' @return data frame with the probability distribution
+bin_distribution = function(trials, prob) {
+  lst = rep(0, trials)
+  for (i in 0:trials) {
+      p = bin_probability(trials, i, prob)
+      lst[i+1] = p
+  }
+  return(data.frame(
+    "success"  = seq(from=0, to=trials, by=1),
+    "probability" = lst))
+}
+# binomial probability distribution
+bin_distribution(trials = 5, prob = 0.5)
+```

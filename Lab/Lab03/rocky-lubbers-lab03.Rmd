@@ -1,0 +1,112 @@
+---
+title: "Lab03"
+author: "Rocky Lubbers"
+date: "9/12/18"
+output: html_document
+---
+
+```{r setup}
+```
+
+```{eval=FALSE}
+mkdir stat133-lab03
+cd stat133-lab03
+curl -O http://textfiles.com/food/bread.txt
+ls
+curl -O http://textfiles.com/food/btaco.txt
+curl -O http://textfiles.com/food/1st_aid.txt
+curl -O http://textfiles.com/food/beesherb.txt
+curl -O http://textfiles.com/food/bakebred.txt
+curl -O http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv
+curl -O http://web.pdx.edu/~gerbing/data/cars.csv
+curl -O http://web.pdx.edu/~gerbing/data/color.csv
+curl -O http://web.pdx.edu/~gerbing/data/snow.csv
+curl -O http://web.pdx.edu/~gerbing/data/mid1.csv
+curl -O http://web.pdx.edu/~gerbing/data/mid2.csv
+curl -O http://web.pdx.edu/~gerbing/data/minutes1.csv
+curl -O http://web.pdx.edu/~gerbing/data/minutes2.csv
+ls -l
+ls -r # reverse order ls
+ls -lt # list the contents in long format arranged by time?
+ls *.txt
+ls -r *.csv
+ls ????.csv
+ls *[2]*.csv
+ls *[0-9]*
+mkdir data
+cd data
+mkdir txt-files
+mkdir csv-files
+cd ..
+mv bread.txt data/txt-files
+mv *.txt data/txt-files
+mv *.csv data/csv-files
+mkdir copies
+cp data/txt-files/bread.txt copies
+cp data/csv-files/*.csv copies
+cd copies
+mv bread.txt bread-recipe.txt
+cd ..
+mv copies copy-files
+rm -R copy-files
+ls -r data/txt-files
+```
+
+
+#Abalone Data Set
+What's the character delimiter?  
+-- The Character Delimiter is a comma (",")  
+Is there a row for column names?  
+-- No  
+Are there any missing values? If so, how are they codified?  
+-- There are no missing values. 
+What is the data type of each column?  
+-- The first column V1 are nominal  
+-- The second column V2 through V8 are continuous  
+-- The last column V9 is integer.  
+
+```{eval = FALSE}
+file abalone.data
+  # ASCII text
+wc abalone.data
+  # newcline count: 4177 word_count: 4177 byte_count: 191873
+wc -l abalone.data
+  # 4177
+head abalone.data
+head -5 abalone.data
+tail abalone.data
+tail -3 abalone.data
+less abalone.data
+```
+
+
+```{r}
+abalone <- read.table("abalone.data", sep = ",")
+# take a peek of first rows
+head(abalone)
+# take a peek of last rows
+tail(abalone)
+str(abalone, vec.len = 1)
+column_names = c("Sex", "Length", "Diameter", "Height", "Whole Weight", "Shucked Weight", "Viscera Weight", "Shell Weight", "Rings")
+column_types = c("character", "real", "real", "real", "real", "real", "real", "real", "integer")
+abalone = read.table("abalone.data", sep = ",", col.names=column_names, colClasses=column_types)
+str(abalone)
+abalone2 = read.csv("abalone.data", sep = ",", col.names=column_names, colClasses=column_types)
+str(abalone)
+abalone10 = head(abalone, 10)
+str(abalone10)
+abalone20 = abalone[11:20,]
+str(abalone10)
+
+Length = cbind(min(abalone$Length), max(abalone$Length), mean(abalone$Length), sd(abalone$Length))
+Diam = cbind(min(abalone$Diameter), max(abalone$Diameter), mean(abalone$Diameter), sd(abalone$Diameter))
+Height = cbind(min(abalone$Height), max(abalone$Height), mean(abalone$Height), sd(abalone$Height))
+Whole = cbind(min(abalone$Whole.Weight), max(abalone$Whole.Weight), mean(abalone$Whole.Weight), sd(abalone$Whole.Weight))
+Shucked = cbind(min(abalone$Shucked.Weight), max(abalone$Shucked.Weight), mean(abalone$Shucked.Weight), sd(abalone$Shucked.Weight))
+Viscera = cbind(min(abalone$Viscera.Weight), max(abalone$Viscera.Weight), mean(abalone$Viscera.Weight), sd(abalone$Viscera.Weight))
+Shell = cbind(min(abalone$Shell.Weight), max(abalone$Shell.Weight), mean(abalone$Shell.Weight), sd(abalone$Shell.Weight))
+Rings = cbind(min(abalone$Rings), max(abalone$Rings), mean(abalone$Rings), sd(abalone$Rings))
+finalstats = matrix(c(Length, Diam, Height, Whole, Shucked, Viscera, Shell, Rings),ncol=8)
+finalstats
+
+```

@@ -1,0 +1,118 @@
+---
+title: "lab12-rocky-lubbers"
+output: html_document
+author: "Rocky Lubbers"
+date: "11/14/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(XML)
+library(xml2)
+library(rvest)
+library(magrittr)
+```
+
+```{r}
+# Assemble url (so it fits on screen)
+basket <- "https://www.basketball-reference.com"
+gsw <- "/teams/GSW/2017.html"
+gsw_url <- paste0(basket, gsw)
+
+# download HTML file to your working directory
+download.file(gsw_url, 'gsw-roster-2017.html')
+
+# Read GSW Roster html table
+gsw_roster <- readHTMLTable('gsw-roster-2017.html')
+
+gsw_roster
+```
+
+
+```{r}
+nba_html <- paste0(basket, "/leagues/NBA_2017.html")
+
+xml_doc <- read_html(nba_html)
+
+xml_text <- xml_doc %>% html_text()
+
+# content of h2 nodes
+xml_doc %>%
+  html_nodes("h2") %>%
+  html_text() 
+
+# content of h1 nodes
+xml_doc %>%
+  html_nodes("h1") %>%
+  html_text() 
+
+# content of strong nodes
+xml_doc %>%
+  html_nodes("strong") %>%
+  html_text() 
+
+# content of button nodes
+xml_doc %>%
+  html_nodes("button") %>%
+  html_text() 
+```
+
+```{r}
+# two html tables
+xml_tables <- xml_doc %>%
+  html_nodes("table") %>%
+  extract(1:2)
+
+# extract names of teams
+xml_tables %>% 
+  html_nodes("a") %>%
+  html_text()
+```
+
+```{r}
+# href attributes
+hrefs = xml_tables %>% 
+  html_nodes("a") %>%
+  html_attr("href")
+
+# get the names of teams
+teams = rep(0, length(hrefs))
+for(i in 1:length(hrefs)) {
+  teams[i] = substr(hrefs[i], start = 8, stop = 10)
+  i = i+1
+}
+teams
+
+# get the filenames of the teams
+files = rep(0, length(hrefs))
+i = 1
+for(team in teams) {
+  files[i] = paste(team, "-roster-2017.csv", sep="")
+  i = i+1
+}
+files
+
+# modify with `hrefs[1]`
+basket <- "https://www.basketball-reference.com"
+bos <- hrefs[1]
+team_url <- paste0(basket, bos)
+read = read_html(team_url)
+read
+roster = html_table(read)
+roster
+write.csv(roster, "BOS-roster-2017.csv")
+
+# write roster csv files
+for(i in 2:8) {
+  team_paste = hrefs[i]
+  team_url <- paste0(basket, team_paste)
+  read = read_html(team_url)
+  roster = html_table(read)
+  write.csv(roster, paste(teams[i], "-roster-2017.csv", sep=""))
+}
+```
+
+

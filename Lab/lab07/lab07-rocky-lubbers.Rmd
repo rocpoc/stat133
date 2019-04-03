@@ -1,0 +1,453 @@
+---
+title: "Lab 07"
+output: html_document
+author: "Rocky Lubbers"
+date: "10/10/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+```
+
+# Simple Math
+```{r}
+#' @title f
+#' @description squares the input
+#' @param x a number
+#' @return the square of the number (x^2)
+f = function(x) {
+  x ^ 2
+}
+f(2)
+f(-5)
+
+#' @title g
+#' @description doubles number and adds 5
+#' @param x a number
+#' @return 2x+5
+g = function(x) {
+  2*x+5
+}
+g(0)
+g(-5/2)
+
+#' @title f of g of x
+#' @description f(g(x))
+#' @param x 
+#' @return function f called on function g of x
+fog = function(x) {
+  f(g(x))
+}
+#' @title g of f of x
+#' @description g(f(x))
+#' @param x 
+#' @return function g called on function f of x
+gof = function(x) {
+  g(f(x))
+}
+
+fog(2)     
+fog(-5)
+gof(0)    
+gof(-5/2)
+```
+
+
+```{r}
+#' @title Pythagoras 
+#' @description Compute the length of the hypotenuse (c) of triangle with lengths a and b
+#' @param a number, leg of triangle
+#' @param b number, leg of triangle
+#' @return length of hypotenuse
+pythagoras = function(a, b=a) {
+  c = sqrt(a^2 + b^2)
+  return(c)
+}
+pythagoras(3, 4)
+pythagoras(5)
+```
+
+
+```{r}
+#' @title Circle Area
+#' @description calculates the area of a circle
+#' @param radius number
+#' @return area of circle given radius of the circle
+circle_area = function(radius=1) {
+  if(radius < 0) {
+    stop("radius cannot be negative")
+  }
+  area = pi * radius^2
+  return(area)
+}
+
+# default (radius 1)
+circle_area()
+# radius 3
+circle_area(radius = 3)
+# bad radius
+circle_area(radius = -2)
+```
+
+
+```{r}
+#' @title Cylinder Area
+#' @description calculates area of cylinder
+#' @param radius of cylinder
+#' @param height of cylinder
+#' @return outputs the area of the cylinder given the height and radius
+cylinder_area = function(radius = 1, height = 1) {
+  if(radius < 0 | height < 0) {
+    stop("radius or height cannot be negative")
+  }
+  area = 2 * circle_area(radius) + (2 * pi * radius * height)
+  return(area)
+}
+
+# default (radius 1, height 1)
+cylinder_area()
+
+# radius 2, height 3
+cylinder_area(radius = 2, height = 3)
+
+# bad radius
+cylinder_area(radius = -2, height = 1)
+
+# bad height
+cylinder_area(radius = 2, height = -1)
+
+# bad radius and height
+cylinder_area(radius = -2, height = -1)
+```
+
+
+```{r}
+#' @title Cylinder Volume
+#' @description gets the volume of cylinder
+#' @param radius of cylinder
+#' @param height of cylinder
+#' @return the volume of cylinder with given radius and height
+cylinder_volume = function(radius = 1, height = 1) {
+  if(radius < 0) {
+    stop("radius cannot be negative")
+  }
+  if(height < 0) {
+    stop("height cannot be negative")
+  }
+  volume = height * circle_area(radius)
+  return(volume)
+}
+
+# default (radius 1, height 1)
+cylinder_volume()
+cylinder_volume(radius = 3, height = 10)
+cylinder_volume(height = 10, radius = 3)
+```
+
+```{r}
+#' @title miles to kilometers
+#' @description converts miles to kilometers
+#' @param m int miles
+#' @return conversion of miles to k kilometers
+miles2kms <- function(m=1) {
+  k = m * 1.609
+  return(k)
+}
+
+x = seq(from=1, to=10, by=1)
+y = miles2kms(x)
+x2 = c(x, seq(from=10, to=100, by=10))
+y2 = c(y, miles2kms(seq(from=10, to=100, by=10)))
+
+miles_km = data.frame(
+  x2,
+  y2
+)
+colnames(miles_km) = c("miles", "kms")
+miles_km
+```
+
+
+```{r}
+#' @title gallons to liters
+#' @description converts gallons to liters
+#' @param g gallons
+#' @return converted gallns to l liters
+gallon2liters <- function(g) {
+  l = g * 3.78541
+  return(l)
+}
+```
+
+```{r}
+#' @title liters to gallons
+#' @description converts liters to gallons
+#' @param l liters
+#' @return converted liters to g gallons
+liters2gallons <- function(l) {
+  g = gallon2liters(l/3.78541) / 3.78541
+  return(g)
+}
+x_lit = seq(from=1, to=10, by=1)
+y_lit = liters2gallons(x)
+x2_lit = c(x_lit, seq(from=10, to=100, by=10))
+y2_lit = c(y_lit, liters2gallons(seq(from=10, to=100, by=10)))
+
+gallon_liters = data.frame(
+  x2_lit,
+  y2_lit
+)
+colnames(gallon_liters) = c("liters", "gallons")
+gallon_liters
+```
+
+
+```{r}
+#' @title seconds to years
+#' @description converts seconds to yearss
+#' @param s seconds
+#' @return y years of s seconds
+seconds2years <- function(s) {
+  y = s / 31557600
+  return(y)
+}
+seconds2years(1000000000) #yes, 1 billion seconds is only 31 years
+```
+
+
+```{r}
+#' @title poly 1
+#' @description cubes the input x
+#' @param x, a number
+#' @return x cubed
+poly1 <- function(x) {
+  return(x^3)
+}
+# set of points
+x <- seq(-4, 4, length.out = 20)
+y <- poly1(x)
+
+# graph polynomial
+plot(x, y, type = 'l', lwd = 3, col = "#FB7215", las = 1)
+abline(h = 0, v = 0, col = '#888888aa', lwd = 1.5)
+title(main = expression(paste(f(x), ' = ', x^3)))
+```
+
+```{r}
+#' @title poly 2
+#' @description sqaures x, subtracts 1, multiplied by x+3 cubed
+#' @param x, a number
+#' @return product of x^2-1 and x+3 ^2
+poly2 <- function(x) {
+  return((x^2 - 1)*(x + 3)^3)
+}
+x <- seq(-4, 4, length.out = 20)
+y <- poly2(x)
+
+# graph polynomial
+plot(x, y, type = 'l', lwd = 3, col = "#FB7215", las = 1)
+abline(h = 0, v = 0, col = '#888888aa', lwd = 1.5)
+title(main = expression(paste(f(x), ' = ', (x^2 - 1)*(x + 3)^3)))
+```
+
+```{r}
+#' @title poly 3
+#' @description sqaures x, subtracts 1, multiplied by x^2 - 9
+#' @param x, a number
+#' @return (x^2 - 1)(x^2 - 9))
+poly3 <- function(x) {
+  (x^2 - 1)*(x^2 - 9)
+}
+# set of points
+x <- seq(-4, 4, length.out = 20)
+y <- poly3(x)
+
+# graph polynomial
+plot(x, y, type = 'l', lwd = 3, col = "#FB7215", las = 1)
+abline(h = 0, v = 0, col = '#888888aa', lwd = 1.5)
+title(main = expression(paste(f(x), ' = ', (x^2 - 1)*(x^2 - 9))))
+```
+
+```{r}
+z <- 100*pi
+# Fill in the following if-else statements. You may (or may not) 
+# have to add or subtract else if or else statements.
+if (z < 0) { z = 0 
+} else if (z > 100) { z = 100
+}
+```
+
+```{r}
+#' @title Is Even
+#' @description checks if given number is even
+#' @param x, a number
+#' @return returns TRUE if even, returns FALSE if odd
+is_even = function(x) {
+  if(is.numeric(x) == FALSE) {
+    stop("not a number")
+  }
+  if((x %% 2) == 0) {
+    return(TRUE)
+  }
+  if((x %% 2) == 1) {
+    return(FALSE)
+  }
+}
+# even number
+is_even(10)
+# odd number
+is_even(33)
+# not a number
+is_even('a')
+```
+
+```{r}
+#' @title Is Odd
+#' @description checks if given number is odd
+#' @param x, a number
+#' @return returns TRUE if odd, returns FALSE if even
+is_odd = function(x) {
+  if(is.numeric(x) == FALSE) {
+    stop("not a number")
+  }
+  if((x %% 2) == 0) {
+    return(FALSE)
+  }
+  if((x %% 2) == 1) {
+    return(TRUE)
+  }
+}
+
+# odd number
+is_odd(1)
+
+# even number
+is_odd(4)
+
+# not a number
+is_odd('a')
+```
+
+
+```{r}
+#' @title Grade
+#' @description Grades assigment scores as A, B, C, D, F
+#' @param score, numeric value of grade of assignment
+#' @return letter associated with grade
+grade = function(score) {
+  if(score < 0 | score > 100) {
+    stop("score must be a number between 0 and 100")
+  }
+  if(score >= 90 & score <= 100) {
+    return("A")
+  } else if(score >= 80 & score < 90) {
+    return("B")
+  } else if(score >= 70 & score < 80) {
+    return("C")
+  } else if(score >= 60 & score < 70) {
+    return("D")
+  } else if(score < 60) {
+    return("F")
+  }
+}
+
+# grade "A"
+grade(score = 90)
+# grade "B"
+grade(score = 89.9999)
+# grade "C"
+grade(score = 70.0000001)
+# grade "F"
+grade(score = 50)
+
+# error grades
+grade(score = -10)
+grade(score = 150)
+```
+
+
+```{r}
+#' @title Miles to inches
+#' @description converts miles to inches
+#' @param x miles
+#' @return converted miles to inches
+miles2inches <- function(x=1) {
+  i = x * 63360
+  return(i)
+}
+```
+
+```{r}
+#' @title Miles to Feet
+#' @description converts miles to feet
+#' @param x miles
+#' @return converted miles to feet
+miles2feet <- function(x=1) {
+  f = x * 5280
+  return(f)
+}
+```
+
+```{r}
+#' @title Miles to yards
+#' @description converts miles to yars
+#' @param x miles
+#' @return converted miles to yars
+miles2yards <- function(x=1) {
+  y = x * 1760
+  return(y)
+}
+```
+
+```{r}
+#' @title Miles to meters
+#' @description converts miles to meters
+#' @param x miles
+#' @return converted miles to meterss
+miles2meters <- function(x=1) {
+  m = x / 0.00062137
+  return(m)
+}
+```
+
+```{r}
+#' @title miles to kilometers
+#' @description converts miles to kilometers
+#' @param x miles
+#' @return converted miles to k kilometers
+miles2kms <- function(x=1) {
+  k = x / 0.6217
+  return(k)
+}
+
+miles2inches(2)
+miles2feet(2)
+miles2yards(2)
+miles2meters(2)
+miles2kms(2)
+```
+
+```{r}
+#' @title convert
+#' @description converts miles into the specified units
+#' @param x miles
+#' @param to specified unit
+#' @return converted miles to specified unit
+convert = function(x, to="km") {
+  switch(to,
+  "km" = miles2kms(x),
+  "in" = miles2inches(x),
+  "ft" = miles2feet(x),
+  "yd" = miles2yards(x),
+  "m" = miles2meters(x)
+  )
+}
+
+convert(3, "in")
+convert(3, "ft")
+convert(3, "yd")
+convert(3, "m")
+convert(3, "km")
+```
+
+

@@ -1,0 +1,87 @@
+---
+title: "Warmup 03"
+author: "Rocky Lubbers"
+date: "September 17, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+github = 'https://github.com/ucb-stat133/stat133-fall-2018/'
+repo = 'raw/master/data/saratoga.txt'
+house = read.table(paste0(github, repo), sep="\t", header = TRUE)
+```
+
+
+#Reading Data Into R
+```{r}
+str(house)
+```
+
+The data have a header containing the variable names, such as price, lot size, waterfront, age, land value, etc.
+The values for an observation are separated by tabs.There are 1729 observations, separated into 16 different variables. The data type for these are factors.
+
+The read.table() has a header argument, that you can specify TRUE/FALSE if the data has a header, and a sep argument, where you put in the type of separation (here it is by tabs). 
+
+
+# Examine Price
+```{r}
+summary(house$Price)
+hist(house$Price)
+hist(log(house$Price))
+cheap = log(house$Price) < 10.5
+sum(cheap) #number of 'cheap' houses 
+subset(house, cheap) #print all variables of cheap houses
+house = subset(house, !cheap) #remove all cheap houses
+house2 = subset(house, !cheap)
+```
+
+
+# Explore Living Area
+```{r}
+Living.Area = house$Living.Area
+summary(house$Living.Area) 
+hist(house$Living.Area)
+hist(log(house$Living.Area)) #the large number values at 6.8 corresponds to around 885 in original units of measurement.
+```
+
+
+# Transforming Variables Into Factors
+```{r}
+BR = house$Bedrooms
+BR[BR > 5] = 5
+BR[BR < 2] = 2
+BR = factor(BR, levels = c(2, 3, 4, 5), labels = c("2- BR", "3 BR", "4 BR", "5+ BR"))
+summary(house$Bedrooms) #summary of bedroom
+summary(BR) 
+```
+
+The summary of BR looks different in the sense that it now combined some of the levels to make it easier to read. Instead of 7 levels, it has 4 levels with the 1/2 and 5/6/7 levels combined (and added) together. Instead of the integer as the labels as the number of rooms, it now has the strings with the associated numbers. 
+
+
+# Plotting Price Against Living Area
+```{r}
+my_colors = c("aquamarine3", "darkgoldenrod2", "coral2", "mediumorchid3")
+br_colors = my_colors[BR]
+plot(Price ~ Living.Area, data=house, log="xy", main="", xlab="Living Area (log sq ft)", ylab = "Price (log $)", col=br_colors, pch=19, cex = 0.4)
+legend("bottomright", fill=my_colors, legend=levels(BR), title=" # Bedrooms", cex=0.75)
+```
+
+
+# Number of Fireplaces
+```{r}
+FP = house$Fireplaces
+FP[FP == 0] = 0
+FP[FP >= 1] = 1
+FP = factor(FP, levels = c(0, 1), labels = c("None", "At Least 1"))
+ppsf = house$Price / house$Living.Area
+fp_colors = c("black", "red")
+plot(ppsf ~ Price, data=house, log="xy", main="", xlab="Price Per Square Foot", ylab = "Price", col=FP, pch=19, cex = 0.2)
+legend("bottomright", fill=fp_colors, legend=levels(FP), title=" # Fireplacess", cex=0.75)
+```
+
+As we can see in this plot, the data in reference to the price is all clustered together including houses with and without fireplaces. The price per square foot is generally increased with houses having a fireplace, which would make sense because houses including fireplaces should have a higher value in square footage because the floor plan includes a more expensive asset. The prices of all of houses are generally mixed but all centered around a certain area (100-150k), which also makes sense because the price alone of the houses should not increase linearly here, otherwise the only factor of house price would be the sheer size of the square footage of it. Generally in this graph, we see a relationship in more price per square foot of the house with a fireplace, but the overall price is mixed and not so much associated with the fireplace numbers.
+
+
+
+

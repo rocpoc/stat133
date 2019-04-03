@@ -1,0 +1,50 @@
+---
+title: "Lab 04"
+output: html_document
+author: "Rocky Lubbers"
+date: "9/19/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{bash, eval = FALSE}
+git config --global user.name "Rocky Lubbers"
+git config --global user.email "rockylubbers@berkeley.edu"
+git config --global color.ui "auto"
+mkdir demo repo
+cd demo-repo
+git init
+echo "# Demo Repo" >> README.md
+git status
+git add README.md
+git status
+git commit -m "first commit"
+git remote add origin https://github.com/rocpoc/demo-repo.git
+git remote -v
+git status
+git push origin master
+echo "# Demo Repo edit" >> README.md
+git status
+git add README.md
+git status
+git commit -m "second commit"
+git push origin master
+git status
+git add README.md
+git status
+git commit -m "NEW"
+git push origin master
+git add README.md
+git commit -m "add some text"
+git status
+git add README.md
+git commit -m "final demo-repo commit"
+git push origin master
+git status
+
+https://github.com/stat133-f18/hw-stat133-rocpoc #url
+
+```

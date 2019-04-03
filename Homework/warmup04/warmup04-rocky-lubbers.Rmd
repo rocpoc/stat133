@@ -1,0 +1,140 @@
+---
+title: "Warmup 04"
+author: "Rocky Lubbers"
+date: "9/21/18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(readr)
+nba = read_csv("/Users/rockylubbers/Desktop/STAT133/Homework/warmup04/nba2018.csv", col_types = cols(
+    position = col_factor(c('C', 'PF', 'PG', 'SF', 'SG')),
+    player= col_character(), 
+    team = col_character(), 
+    height = col_character(), 
+    birth_date = col_character(), 
+    country = col_character(), 
+    experience = col_character(), 
+    college = col_character(),
+    salary = col_double(), 
+    field_goals_perc = col_double(), 
+    points3_perc = col_double(), 
+    points2_perc = col_double(), 
+    points1_perc = col_double(), 
+    effective_field_goal_perc = col_double()
+    ))
+
+str(nba)
+```
+
+
+# 2 Right After Importing Data
+```{r}
+#experience
+summary(nba$experience)
+nba$experience[nba$experience == 'R'] = 0
+nba$experience = as.integer(nba$experience)
+summary(nba$experience)
+
+#salary
+nba$salary = nba$salary / 1000000
+summary(nba$salary)
+
+#position
+pos_names = c("center", "power_fwd", "point_guard", "small_fwd", "shoot_guard")
+levels(nba$position) = pos_names
+table(nba$position)
+```
+
+
+# 3 A bit of subscripting
+```{r}
+length(nba$player[which(nba$college == 'University of California, Los Angeles', TRUE)]) #number of players that went to UCLA
+length(nba$player[which(nba$college == 'University of California, Berkeley', TRUE)]) #number of players that went to Cal
+max(nba$weight) #max weight
+nba$player[which.max(nba$weight)] #player with max weight
+mean(nba$weight) #average weight
+median(nba$salary) #median salary (in millions of dollars)
+median(nba$salary[nba$experience >= 10]) #median salary with >= 10 years experience
+median(nba$salary[nba$position == "shoot_guard" | nba$position == "point_guard"]) #median salary of SGs and PGs
+median(nba$salary[nba$position == "power_fwd" & nba$age >= 30 & nba$weight >= 240]) #median salary of power forward, 30 or over, and 240 or overlbs
+
+#Golden State Warriors Stats
+gsw = data.frame(
+  nba$player[nba$team == 'GSW'], 
+  nba$position[nba$team == 'GSW'], 
+  nba$height[nba$team == 'GSW'], 
+  nba$weight[nba$team == 'GSW'], 
+  nba$age[nba$team == 'GSW'])
+colnames(gsw) = c("Player", "Possition", "Height", "Weight", "Age")
+gsw
+```
+
+# 4 Performance of Players
+```{r}
+nba$missed_field_goals = nba$field_goals_atts - nba$field_goals
+nba$miseed_free_throws = nba$points1_atts
+nba$rebounds = nba$total_rebounds
+nba$mins_game = nba$minutes
+
+EFF = (nba$points + nba$rebounds + nba$assists + nba$steals + nba$blocks - nba$missed_field_goals - nba$miseed_free_throws - nba$turnovers) / nba$games
+
+nba$efficiency = EFF
+summary(nba$efficiency)
+
+hist(nba$efficiency, col = c("blue", "red", "green", "purple", "magenta", "yellow", "gray"), xlab=" Player Efficiency", ylab = "Frequency of Player Efficiency", main= "NBA Efficiency Histogram")
+
+topten = data.frame(
+  nba$player[order(nba$efficiency, decreasing=TRUE)][1:10],
+  nba$team[order(nba$efficiency, decreasing=TRUE)][1:10],
+  nba$salary[order(nba$efficiency, decreasing=TRUE)][1:10], 
+  nba$efficiency[order(nba$efficiency, decreasing=TRUE)][1:10]
+)
+colnames(topten) = c("player", "team", "salary", "efficiency")
+topten
+
+nba$player[nba$efficiency < 0] #NBA players with negative efficiency
+```
+
+# 5 Further Exploration
+```{r}
+# The more efficient a player is, the higher his salary?
+plot(nba$efficiency, nba$salary, col="blue", xlab="Efficiency", ylab="Salary", main = "NBA Salary x Efficiency")
+```
+
+-- As we can see in this graph, there seems to be a linear correlation with salary in respect to efficiency. This generally means that it is true that the more efficient a player is the higher his salary. However, there is a large cluster from 0-8 in efficiency, with no real increase in salary for the players. So many players in the NBA that are in this range of efficiency have around the same salaries as a majority of the players (who are also in this range). Yet, when the efficiency of a player increases over ~8, we start to see the linear correlation between salary and efficiency show. 
+
+---
+
+```{r}
+# As players get older, do they tend to become more efficient?
+plot(nba$efficiency, nba$age, col="red", xlab="Efficiency", ylab="Age", main = "NBA Age x Efficiency")
+
+```
+
+-- When we plot Age against Efficiency for NBA players, we get no evidence that with age, players become more efficient. As we can see in this plot, there is not correlation in the data. We have widespread efficiency across all ages, with the most efficient age ~32, and least efficient age around ~32 as well. 
+
+---
+
+```{r}
+# Does the rank of a player seem to be associated with his efficiency? (i.e more important the rank, more efficient?
+plot(nba$rank, nba$efficiency, col="orange", xlab="Rank", ylab="Efficiency", main = "NBA Rank x Efficiency")
+```
+
+-- As this plot shows, the rank of the player is highly associated with his efficiency. The more important the rank (i.e lower numbers on the x axis--rank 1 being most important) the higher the efficiency. Thus, when the rank decreases in importance (increases in value on x-axis), we see the efficiency start to fall linearly. Lower ranks, like 5-25 have much lower efficiency values than that of higher ranks 1-5.
+
+---
+
+# 6 Comments and Reflections
+-- This homework took me a few hours to complete, start to finish. I think the only thing that was extra challenging and time consuming for me was the importing of the dataset using the read_table function, and trying to import the columns as the correct data types. Everything else for me was straightforward and not too challenging. I did not need help on this, I completed it all myself other than a few clarifying questions I asked in lab. Nothing was too hard to grasp, just the importing of the data set was a bit frustrating because I did not understand the documentation too well. Overall this assignment was straightforward, and a good challenge!
+
+
+
+
+
+

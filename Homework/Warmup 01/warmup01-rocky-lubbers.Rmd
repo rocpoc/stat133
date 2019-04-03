@@ -1,0 +1,122 @@
+---
+title: "Warm Up 01"
+author: "Rocky Lubbers"
+date: "8/30/18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Jon Snow
+
+![](https://upload.wikimedia.org/wikipedia/en/f/f0/Jon_Snow-Kit_Harington.jpg)
+
+
+> *"When enough people make false promises,*
+> *words stop meaning anything" -- Jon Snow*
+
+
+| Jon Snow      | Facts |
+| ----------- | ----------- |
+| Status      | Alive       |
+| Date of Birth  | 281 AC   |
+| Origin      | Winterfell  |
+| Allegiance  | House Stark |
+| Predecessor | N/A         |
+| Successor   | N/A         |
+| Culture     | Northmen    |
+| Religion    | Old Gods of the Forest |
+| Father      | Rhaegar Targaryen      |
+| Mother      | Lyanna Stark           |
+
+---	
+
+
+## Corn Fritter Recipe
+
+![](https://www.eatwell101.com/wp-content/uploads/2018/05/Cheesy-Corn-Fritters-3.jpg)
+
+---	
+
+###### Ingredients
+* 6 ears of corn (about 3 cups corn)
+* 4 scallions, both white and greens finely chopped
+* 1/2 cup chopped herbs of your choice (chives are the go-to for me)
+* About 1 cup (6 ounces) grated sharp cheddar (other cheese is fine too)
+* 3/4 teaspoon kosher salt, plus more to taste
+* Freshly ground black pepper
+* 4 large eggs
+* 1 cup all-purpose flour, plus 2 more tablespoons if needed
+* Olive or a neutral oil for frying (you can use Safflower or Avocado oil!)
+
+---	
+
+###### Special Kitchen Tools
+- Sharp Knife
+- Medium-Large Pan
+- Paper Towels (for dabbing oil)
+
+---	
+
+###### Steps
+1. Use a sharp knife to cut the kernels from the corn into the bowl, then run the back of your knife up and down the stalk to release as much “milk” as possible into the bowl. Try to fill around 3 cups of corn.
+2. Add scallions, herbs, cheese, and many grinds of black pepper and stir to evenly combine. 
+3. Add the eggs and use a fork or spoon to stir until they’re all broken up and evenly coat the corn mixture. 
+4. Add 1 cup of flour and stir to throughly coat.
+5. Heat 2 to 3 tablespoons oil in a large frying pan over medium heat. Once hot and shimmering, add your first scoop of corn fritter batter and press it gently to flatten it. **Corn fritters cook quickly so keep an eye on them.** When the underside is a deep golden brown, flip and cook to the same color on the second side. 
+6. Drain on a paper towel, sprinkling on more salt. When it’s cool enough to try, taste and adjust the seasonings of the remaining batter if needed.
+7. **Enjoy!**
+
+---	
+
+## Quadratic Formula
+
+A quadratic equation is any equation having the form:
+
+--- 
+
+$ax^2 + bx + c = 0$
+
+*where x represents a variable, and a, b, and c represent known numbers such that a is not equal to 0*
+
+---
+
+The formula for the *roots* of the quadratic equation goes as follows:
+
+$x={\frac {-b\pm {\sqrt {b^{2}-4ac\ }}}{2a}}.$
+
+---
+
+Furthermore, the derivation of the solution is:
+
+$ax^2 + bx + c = 0$
+
+$4a^2x^2 + 4abx + 4ac = 0$
+
+$4a^2x^2 + 4abx = - 4ac$
+
+$4a^2x^2 + 4abx + b^2 = b^2 - 4ac$
+
+$(2ax + b)^2 = b^2 - 4ac$
+
+$2ax + b = \pm \sqrt{b^2 - 4ac}$
+
+$2ax = -b \pm \sqrt{b^2 - 4ac}$
+
+$x= {\frac {-b\pm {\sqrt {b^{2}-4ac\ }}}{2a}}.$
+
+---
+
+### Comments & Reflections
+
+Since this was my first time using markdown, some of the intricate Latex mathematical symbols started to become somewhat tedious and frustrating, however most of the other writing was straightforward and easy for me. It took me around an hour to complete this assignment start to finish by myself. I did not need help on this, and I noticed most of my questions I could look up documentation for which is comforting! I think the most time consuming part for me however was the math section as well as putting an image in for the Game of Thrones part! 
+
+
+
+---
+
+

@@ -1,0 +1,124 @@
+---
+title: "Warmup 02"
+author: Rocky Lubbers
+date: 9/7/18
+output: html_document
+---
+
+## Inspect the Objects
+The classes of objects are: character, number, integers.   
+There are only vectors in the dataset.  
+The 'tent' object is a character vector  
+The 'bestuse' object is a character vector.  
+The 'brand' object is a character vector.  
+The 'capacity' object is a character vector.  
+The 'height' object is a integer vector.  
+The 'price' object is a number vector.   
+The 'season' object is a character vector.   
+The 'weight' object is a number vector.  
+All objects do in fact have the same length (90).  
+
+
+## 1 Data Preprocessing
+```{r}
+load("tents.RData")
+str(tent) # its all characters, 90 elements long
+#name of the columns
+tents_matrix = cbind(
+  tent,
+  bestuse,
+  brand,
+  capacity,
+  height,
+  price,
+  season,
+  weight
+)
+
+head(tents_matrix, n=5) #first 5 rows
+tail(tents_matrix, n=3) #last 3 rows
+
+# Quantitative Variable
+summary(price)
+mean(price)
+sd(price)
+min(price)
+max(price)
+median(price)
+quantile(price)
+
+hist(price) # The histogram shows a center from x=300 to x = 400, with a normal distribution. The data is a bit more skewed to the left however.
+
+boxplot(price) #The Boxplot similarly shows the data spans from the range 100-700, but with most of the data being in the 300-400 range. 
+
+plot(density(price)) #price density
+plot(density(height)) # height density
+```
+
+This density curve is much different from the price curve. It has two peaks, with the first around x=105, and another around x=180.The peak at 105 has a very high density, making it much taller than the small peak at 180. Before the 105 peak, the curve slowly increases and around 75 it starts rapidly increasing. Around 110, it steeply decreasess and dips down at 150, and then slowly climbs up again at 180, then dropss off around 200. Other than the two ends of the plot, the lowest point is around 150 here. 
+
+```{r}
+# Qualitative Variable
+is.factor(bestuse)
+bestuse = factor(bestuse)
+table(bestuse)
+prop.table(table(bestuse))
+# For the bestuse dataset, the frequency counts of the different levels are: Backapacking (59), Carcamping (25), and Mountaineering (6). Furthermore, the relative frequencies (proportions) of the data is Backacking=0.655, Carcamping=0.277, and Mountaineering=0.066. 
+barplot(table(bestuse))
+```
+
+
+## 2 Scatterplot of Height and Price
+```{r}
+plot.new()
+plot.window(c(0,500),c(0,1000))
+axis(1)
+axis(2)
+plot(price, height, xlab="Price", ylab = "Height")
+title("Height vs. Price")
+points(price, height, pch=10, col="blue", cex=1)
+```
+
+In this scatterplot, we see most of the data points centered around the 100-120 height range, with the price being spread around many different rangess (100-600). Many of these points are clustered around the prices divisible by 100 (such as 200, 300, 400, 500, and 600). The center of this data seemss to be around 350 for the price, and around 120 for the height. When the height increases to around 140, we see some data points starting at the 200 price range. When the height increases to around the 180 area, the price increases to the 300 range but then these just increase in price while the height stays the same. There is a somewhat linear relationship here, but it is difficult to speculate that the price increases as the height increases, it is somewhat sporadic.
+
+
+## 3 Correlation Between Height and Price
+```{r}
+n = length(height)
+x_mean = (1 / length(height)) * sum(height) #calculate the mean of height
+y_mean = (1 / length(price)) * sum(price) #calculate the mean of price
+var_x = (1/ (length(height) - 1)) * sum((height-x_mean)^2) #variance of height
+var_y = (1 / (length(price) - 1)) * sum((price-y_mean)^2) #variance of price
+sd_x = sqrt(var_x) #standard deviation of height
+sd_y = sqrt(var_y) #standard deviation of price
+cov_xy = (1 / (length(price) - 1)) * sum((height-x_mean)*(price-y_mean)) #covariance between X and Y
+cor_xy = cov_xy/((sd_x)*(sd_y)) #correlation between X and Y
+
+# More Manipulations
+weight_lbs = weight*(0.00220462)
+height_in = height*(0.393701)
+length(tent[price <= 300]) #number of tents with price less than or equal to $300
+length(tent[price >= 300 & price <= 400]) #number of tents with price between $300 and $400 inclusive
+tent[which.max(price)] #name of tent with maximum price
+length(tent[price>400 & weight < 1500]) #number of tents with price > $400 and weight < 1500 grams
+height_p90 = quantile(height, .9) #90th percentile for height
+weight_p90 = quantile(weight, .9) #90th percentile for weight
+tent[(height > height_p90) & (weight > weight_p90)] #name of tents with height>height_p90 and weight>weight_p90
+
+# Working with Factors
+breaks = c(0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000)
+weight_cut = cut(weight, breaks=breaks, right = TRUE)
+name_weight = c("1kg", "2kg", "3kg", "4kg", "5kg", "6kg", "7kg", "8kg", "9kg")
+levels(weight_cut) = name_weight
+table(weight_cut)
+
+#Reording a Factor
+season_factor = factor(season, levels = c('3-season', '3-4-season', '4-season'), ordered=TRUE )
+season = season_factor
+is.ordered(season)
+```
+
+
+## Comments & Reflections
+This assignment was very straightforard for me. I think the only challenging aspect was getting used to the logical subsetting but after a few tries it became very intuitive for me. I did not need any help with the assignment other than a few clarifying questions on piazza. It took me around 1-1.5 hours to complete start to finish, and the most time consuming part was understanding and messing around with the scatterplots. I feel like I understood all of this assignment well because the instructions were very clear. 
+

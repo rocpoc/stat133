@@ -1,0 +1,168 @@
+---
+title: "Warmup 07"
+output: html_document
+author: "Rocky Lubbers"
+date: "11/6/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+dat = read.csv("text-emotion.csv")
+counts = rep(0, length(dat$content))
+for(i in 1:length(dat$content)) {
+  counts[i] = nchar(as.character(dat$content[i]))
+}
+summary(counts)
+
+hist(counts, breaks = seq(from=0, to=170, by=5))
+
+```
+
+```{r}
+length(counts[counts == 0]) #number of tweets with zero characters (none)
+length(counts[counts == 1]) #number of tweets with 1 character
+dat$content[nchar(as.character(dat$content)) == 1] # content of tweets with 1 character
+which((nchar(as.character(dat$content)) == 1) == TRUE) #index of tweets with 1 character
+
+dat$content[which.max(nchar(as.character(dat$content)))] #tweet with most characters
+nchar(as.character(dat$content[which.max(nchar(as.character(dat$content)))])) #length of longest tweet
+which((nchar(as.character(dat$content)) == 167) == TRUE) #index of of longest tweet
+```
+
+
+# 2 Sentiment
+```{r}
+levels(dat$sentiment) #different types of sentiment
+table(factor(dat$sentiment)) #table of frequencies of sentiment values
+relative = prop.table(table(dat$sentiment))
+relative
+barplot(sort(relative, increasing = TRUE), names.arg = names(sort(relative, increasing = TRUE)), horiz = TRUE,  las=1)
+
+worry_index = which((dat$sentiment == 'worry') == TRUE)
+worry_counts = sum(nchar(as.character(dat$content[worry_index]))) / length(worry_index)
+
+surprise_index = which((dat$sentiment == 'surprise') == TRUE)
+surprise_counts = sum(nchar(as.character(dat$content[surprise_index]))) / length(surprise_index)
+
+sadness_index = which((dat$sentiment == 'sadness') == TRUE)
+sadness_counts = sum(nchar(as.character(dat$content[sadness_index]))) / length(sadness_index)
+
+relief_index = which((dat$sentiment == 'relief') == TRUE)
+relief_counts = sum(nchar(as.character(dat$content[relief_index]))) / length(relief_index)
+
+neutral_index = which((dat$sentiment == 'neutral') == TRUE)
+neutral_counts = sum(nchar(as.character(dat$content[neutral_index]))) / length(neutral_index)
+
+love_index = which((dat$sentiment == 'love') == TRUE)
+love_counts = sum(nchar(as.character(dat$content[love_index]))) / length(love_index)
+
+hate_index = which((dat$sentiment == 'hate') == TRUE)
+hate_counts = sum(nchar(as.character(dat$content[hate_index]))) / length(hate_index)
+
+happiness_index = which((dat$sentiment == 'happiness') == TRUE)
+happiness_counts = sum(nchar(as.character(dat$content[happiness_index]))) / length(happiness_index)
+
+fun_index = which((dat$sentiment == 'fun') == TRUE)
+fun_counts = sum(nchar(as.character(dat$content[fun_index]))) / length(fun_index)
+
+enthusiasm_index = which((dat$sentiment == 'enthusiasm') == TRUE)
+enthusiasm_counts = sum(nchar(as.character(dat$content[enthusiasm_index]))) /length(enthusiasm_index)
+
+empty_index = which((dat$sentiment == 'empty') == TRUE)
+empty_counts = sum(nchar(as.character(dat$content[empty_index]))) / length(empty_index)
+
+boredom_index = which((dat$sentiment == 'boredom') == TRUE)
+boredom_counts = sum(nchar(as.character(dat$content[boredom_index])))/length(boredom_index)
+
+anger_index = which((dat$sentiment == 'anger') == TRUE)
+anger_counts = sum(nchar(as.character(dat$content[anger_index])))/length(anger_index)
+
+avg_counts = c("worry avg"= worry_counts, "surprise avg"=surprise_counts, "sadness avg"=sadness_counts, "relief avg"=relief_counts, "neutral avg"=neutral_counts, "love avg"=love_counts, "hate avg"=hate_counts, "happiness avg"=happiness_counts,"fun avg"=fun_counts, "enthusiasm avg"=enthusiasm_counts, "empty avg"=empty_counts, "boredom avg"=boredom_counts, "anger avg"=anger_counts)
+
+as.table(avg_counts)
+```
+
+
+# 3 Author
+```{r}
+library(stringr)
+author = dat$author
+length(author[str_count(author) > 15]) # No longer than 15 characters
+length(author[str_detect(author, pattern = "[A-Za-z0-9_]{1,15}") == FALSE]) # make sure username contains no symbols other than alphanumerics
+min(nchar(as.character(author))) # number of characters of the shortest username
+author[str_count(author) == 2] #name of the author 
+```
+
+# 4 Various Symbols and Strings 
+```{r}
+length(dat$content[str_detect(dat$content, "[\\^]+") == TRUE]) # how many tweets contain at least one caret symbol
+
+length(dat$content[str_detect(dat$content, "[$][$][$]+") == TRUE]) #how many tweets contain three or more consecutive dollar symbols
+
+length(dat$content[str_detect(dat$content, "[Aa]") == FALSE]) #How many tweets do NOT contain the characters
+
+head(substr(dat$content[str_detect(dat$content, "[Aa]") == FALSE], start = 1, stop = 10), 10) #first 10 elements of the tweets that do NOT contain the characters 
+
+exclaim = str_count(dat$content, "[!]") #Number of exclamation symbols
+
+summary(exclaim) #summary of exclaim
+
+dat$content[exclaim == 76] #the largest number of exclamation symbols
+
+length(dat$content[str_detect(dat$content, " ?omg ?| ?OMG ?") == TRUE]) #strings with 'omg'
+```
+
+## Table of Average Number of Patterns by Sentiment
+```{r}
+sentis = list(worry_index, surprise_index, sadness_index, relief_index, neutral_index, love_index, hate_index, happiness_index, fun_index, enthusiasm_index, empty_index, boredom_index, anger_index)
+
+lower = rep(0, 13)
+upper = rep(0, 13)
+dig = rep(0, 13)
+punc = rep(0, 13)
+spc = rep(0, 13)
+
+i = 1
+for(sentiment in sentis) {
+  lowercase = str_count(as.character(dat$content[sentiment]), pattern = "[:lower:]")
+  uppercase = str_count(as.character(dat$content[sentiment]), pattern = "[:upper:]")
+  digits = str_count(as.character(dat$content[sentiment]), pattern = "[:digit:]")
+  punct = str_count(as.character(dat$content[sentiment]), pattern = "[:punct:]")
+  space = str_count(as.character(dat$content[sentiment]), pattern = "[:space:]")
+  
+  avg_lower = sum(lowercase) / length(lowercase)
+  avg_upper = sum(uppercase) / length(uppercase)
+  avg_dig = sum(digits) / length(digits)
+  avg_punct = sum(punct) / length(punct)
+  avg_space = sum(space) / length(space)
+  
+  lower[i] = avg_lower
+  upper[i] = avg_upper
+  dig[i] = avg_dig
+  punc[i] = avg_punct
+  spc[i] = avg_space
+
+  i = i + 1
+}
+
+df = data.frame(lower, upper, dig, punc, spc, row.names = c("worry", "surprise", "sadness", "relief", "neutral", "love", "hate", "happiness", "fun", "enthusiasm", "empty", "boredom", "anger"))
+
+colnames(df) = c("avg # lowercase letters", "avg # of uppercase letters", "avg # of digits", "avg # of punctuations", "avg # of spaces")
+df
+```
+
+
+
+
+
+
+
+
+
+
+
+

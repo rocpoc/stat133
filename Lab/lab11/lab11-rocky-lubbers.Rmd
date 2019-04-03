@@ -1,0 +1,89 @@
+---
+title: "Lab 11"
+output: html_document
+author: "Rocky Lubbers"
+date: "11/7/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+box1 = c('blue', 'blue', 'red')
+box2 = c('blue', 'blue', 'red', 'red', 'red', 'white')
+
+repetitions <- 1000
+drawn_balls <- matrix(nrow = repetitions, ncol = 4)
+for (i in 1:repetitions) {
+  num = runif(1)
+  if(num > 0.5) {
+    samp = sample(box1, size = 4, replace = TRUE)
+  } else if(num <= 0.5) {
+    samp = sample(box2, size = 4, replace = FALSE)
+  }
+  drawn_balls[i,] = samp
+}
+head(drawn_balls, 5)
+
+zero = 0
+one = 0
+two = 0
+three = 0
+four = 0
+for (i in 1: repetitions) {
+  sample = drawn_balls[i,]
+  if((sum(drawn_balls[i,]== 'blue')) == 0) {
+    zero = zero + 1
+  } else if((sum(drawn_balls[i,]== 'blue')) == 1) {
+    one = one + 1
+  } else if((sum(drawn_balls[i,]== 'blue')) == 2) {
+    two = two + 1
+  } else if((sum(drawn_balls[i,]== 'blue')) == 3) {
+    three = three + 1
+  } else if((sum(drawn_balls[i,]== 'blue')) == 4) {
+    four = four + 1
+  }
+}
+p_zero = zero / 1000
+p_one = one / 1000
+p_two = two / 1000
+p_three = three / 1000
+p_four = four / 1000
+blue_balls = c(p_zero, p_one, p_two, p_three, p_four)
+names(blue_balls) = c('zero', 'one', 'two', 'three', 'four')
+blue_balls
+```
+
+```{r}
+library(plotly)
+n = 1000
+logic_balls = rowSums(drawn_balls == "blue") #convert to logical vector
+
+blue_zero = logic_balls == 0
+zero_freq = cumsum(blue_zero) / 1:n
+
+blue_one = logic_balls == 1
+one_freq = cumsum(blue_one) / 1:n
+
+blue_two = logic_balls == 2
+two_freq = cumsum(blue_two) / 1:n
+
+blue_three = logic_balls == 3
+three_freq = cumsum(blue_three) / 1:n
+
+blue_four = logic_balls == 4
+four_freq = cumsum(blue_four) / 1:n
+
+df = data.frame(x = c(1:1000), y0 = zero_freq, y1 = one_freq, y2 = two_freq, y3 = three_freq, y4 = four_freq)
+ggplot(df, aes(x = x)) + 
+  geom_line(aes(x, y = y0, col = 'tomato')) + 
+  geom_line(aes(x, y = y1, col = '#556B2F')) +
+  geom_line(aes(x, y = y2, col = '#008080')) +
+  geom_line(aes(x, y = y3, col = 'blue')) + 
+  geom_line(aes(x, y = y4, col = 'purple')) + 
+  scale_color_discrete(name = "number", 
+                      labels = c("0", "1", "2", "3", "4")) +
+  xlab("reps") + ylab("freqs") + ggtitle("Relative frequencies of the number of blue balls") +
+  theme(plot.title = element_text(hjust = 0.5))
+```

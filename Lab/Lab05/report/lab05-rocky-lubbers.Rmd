@@ -1,0 +1,187 @@
+---
+title: "Lab 05"
+author: "Rocky Lubbers"
+date: "9/26/18"
+output: html_document
+---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = '../images/')
+```
+
+
+```{}
+cd STAT133/Lab
+mkdir Lab05
+cd Lab05
+mkdir data
+mkdir report
+mkdir images
+ls
+touch README.md
+cd data
+curl -O https://raw.githubusercontent.com/ucb-stat133/stat133-fall-2018/master/data/nba2018-players.csv
+ls
+wc nba2018-players.csv
+head nba2018-players.csv
+tail -5 nba2018-players.csv
+```
+
+
+# NBA Data
+```{r}
+library(readr)
+library(dplyr)
+dat <- read_csv('../data/nba2018-players.csv')
+
+slice(dat, 1:5)
+slice(dat, c(10, 15, 20, 25, 30, 35, 40, 45, 50))
+slice(dat, 472:476)
+filter(dat, height > 70)
+filter(filter(dat, team == 'GSW'), position == 'C')
+select(filter(dat, team == 'LAL'), player)
+select(filter(filter(dat, team == 'GSW'), position == 'PG'), player, salary)
+
+select(filter(filter(dat, experience > 10), salary <= 10000000), player, age, team)
+slice(select(filter(filter(dat, age == 20), experience == 0), player, team, height, weight), 1:5)
+```
+
+# Adding new variables: mutate()
+```{r}
+gsw <- filter(dat, team == 'GSW')
+mutate(gsw, product = height * weight)
+gsw3 = mutate(gsw, log_hight = log(height), log_weight = log(weight))
+arrange(filter(dat, height < 71), height)
+slice(select(arrange(dat, desc(points3)), player, team, points3), 1:10)
+
+gsw_minutes = mutate(gsw, min_per_game = minutes / games)
+gsw_mpg = select(arrange(gsw_minutes, desc(min_per_game)), player, experience, min_per_game)
+gsw_mpg
+```
+
+# Summarizing values with summarise()
+```{r}
+summarise(dat, max(height))
+summarise(dat, sd(points3))
+summarise(group_by(dat, team), median(points3))
+
+slice(arrange(
+  summarise(
+    group_by(dat, team),
+    avg_points3 = mean(points3)), avg_points3), 1:5)
+
+filter(filter(dat, position == 'PF'))
+
+summarise(
+  filter(dat, experience ==5 | experience == 10), 
+  avg = mean(age), sd = sd(age)
+)
+
+```
+
+
+```{r scatterplot 1}
+library(ggplot2)
+ggplot(data = dat) + geom_point(aes(x = height, y = weight))
+```
+
+```{r scatterplot 2}
+ggplot(data = dat) + 
+  geom_point(aes(x = height, y = weight)) + 
+  geom_text(aes(x = height, y = weight, label = player), size = 1, nudge_y = 2)
+```
+
+```{r scatterplot 3}
+ggplot(data = filter(dat, team == 'GSW')) + 
+  geom_point(aes(x = height, y = weight)) + 
+  geom_text(aes(x = height, y = weight, label = player), size = 3, nudge_y = 2)
+```
+
+```{r scatterplot 4}
+ggplot(data = dat, aes(x = salary)) + 
+  geom_density()
+```
+
+```{r scatterplot 5}
+ggplot(data = dat, aes(x = points2)) + 
+  geom_histogram(binwidth = 50)
+```
+
+```{r scatterplot 6}
+ggplot(data = dat, aes(x = position)) + 
+  geom_bar()
+```
+
+```{r scatterplot 7}
+ggplot(data = filter(dat, position == 'C')) + 
+  geom_point(aes(x = experience, y = salary)) +
+  geom_smooth(aes(experience, salary), method='lm')
+```
+
+```{r scatterplot 8}
+ggplot(data = filter(dat, position == 'C')) + 
+  geom_point(aes(x = experience, y = salary)) +
+  geom_smooth(aes(x = experience, y = salary), method = 'loess')
+```
+
+```{r scatterplot 9}
+ggplot(data = dat, aes(x = experience, y = salary)) +
+  geom_point() +
+  facet_wrap(~ position) 
+```
+
+```{r scatterplot 10}
+ggplot(data = dat, aes(x = experience, y = salary)) +
+  geom_point() +
+  facet_wrap(~ team) 
+```
+
+```{r scatterplot 11}
+ggplot(data = dat, aes(x = age)) +
+  geom_density() +
+  facet_wrap(~ team) 
+```
+
+```{r scatterplot 12}
+ggplot(data = dat, aes(x = height, y = weight)) +
+  geom_point() + 
+  facet_wrap(~ position) 
+```
+
+```{r scatterplot 13}
+ggplot(data = dat, aes(x = height, y = weight)) +
+  geom_density_2d() + 
+  facet_wrap(~ position) 
+```
+
+```{r scatterplot 14}
+ggplot(data = filter(dat, team == 'GSW')) + 
+  geom_point(aes(x = experience, y = salary)) + 
+  theme_bw()
+```
+
+```{r scatterplot 15}
+ggplot(data = filter(dat, team == 'GSW')) + 
+  geom_point(aes(x = experience, y = salary)) + 
+  theme_dark()
+```
+
+More shell commands
+```{}
+cd images
+ls
+ls -l
+ls -l -t
+ls -r
+mkdir ../copies
+cp scatterplot1-1.png ../copies
+cp *.png ../copies
+cd ..
+cd copies
+mv scatterplot10-1.png scatterplot10
+mv scatterplot2-1.png scatterplot2
+cd ..
+cd report
+mv ../copies ../copy-files
+rm ../copy-files/scatterplot10
+rm -R ../copy-files
+```

@@ -1,0 +1,116 @@
+---
+title: "lab06"
+output: html_document
+author: "Rocky Lubbers"
+date: "10/3/18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{}
+mkdir lab06
+cd lab06
+mkdir data
+mkdir code
+mkdir output
+mkdir images
+ls
+touch README.md
+cd data
+curl -O https://raw.githubusercontent.com/ucb-stat133/stat133-fall-2018/master/data/nba2018-players.csv
+ls
+wc nba2018-players.csv
+head nba2018-players.csv
+tail -5 nba2018-players.csv
+```
+
+```{r, results='hide'}
+# packages
+library(readr)    # importing data
+library(dplyr)    # data wrangling
+library(ggplot2)  # graphics
+```
+
+```{r, results='hide'}
+# exporting some data tables
+nba = read_csv("../data/nba2018-players.csv")
+warriors = arrange(filter(nba, team == 'GSW'), salary)
+write.csv(warriors, file = "../output/warriors.csv", row.names = FALSE)
+lakers = arrange(filter(nba, team == 'LAL'), desc(experience))
+write_csv(lakers, "../output/lakers.csv")
+```
+
+```{r}
+#exporting R output
+sink(file = '../output/data-structure.txt')
+summary(str(nba))
+sink()
+```
+
+```{r}
+sink(file = '../output/summary-warriors.txt')
+summary(warriors)
+sink()
+```
+
+```{r}
+sink(file = '../output/summary-lakers.txt')
+summary(lakers)
+sink()
+```
+
+```{r}
+#exporting pngs, jpeg, pdf
+plot(nba$height, nba$weight, xlab = 'Height', ylab = 'Height')
+png(filename = "../images/scatterplot-height-weight.png")
+plot(nba$height, nba$weight, xlab = 'Height', ylab = 'Height')
+dev.off()
+
+plot(nba$height, nba$weight, pch = 20, xlab = 'Height', ylab = 'Height')
+png(filename = "../images/scatterplot-height-weightHIRES.png", width = 1920, height = 1080)
+plot(nba$height, nba$weight, pch = 20, xlab = 'Height', ylab = 'Height')
+dev.off()
+
+hist(nba$weight)
+jpeg(filename = "../images/weight_hist.jpeg", width = 600, height = 400)
+hist(nba$weight)
+dev.off()
+
+hist(nba$weight)
+pdf(file= "../images/weight_hist.pdf", width = 7, height = 5)
+hist(nba$weight)
+dev.off()
+```
+
+```{r}
+## exporting ggplots
+gg_pts_salary = ggplot(data = nba) + geom_point(aes(x=points,y=salary))
+ggsave("../images/points_salary.pdf", gg_pts_salary, width = 7, height = 5)
+gg_pts_salary
+
+gg_ht_wt_positions = ggplot(data = nba) + geom_point(aes(x=points, y=salary)) + facet_wrap(~position)
+ggsave("../images/height_weight_by_position.pdf", gg_ht_wt_positions, width = 6, height = 4)
+ggplot(data = nba) + geom_point(aes(x=points, y=salary)) + facet_wrap(~position)
+```
+
+```{r}
+# pipe operations
+nba %>% filter(team == 'LAL')
+
+warriors %>% filter(position == 'PG') %>% select(player, salary)
+
+nba %>% filter(experience > 10 & salary <= 10000000) %>% select(player, age, team)
+
+nba %>% filter(experience == 0 & age == 20) %>% select(player, team, height, weight) %>% slice(1:5)
+
+nba = mutate(nba, min_per_game = minutes/games)
+gsw_mpg = data.frame(
+          nba %>% filter(team == 'GSW') %>% select(player, experience, min_per_game) %>% arrange(desc(min_per_game)))
+
+nba %>% group_by(team) %>%select(points3) %>% summarise(avg3point = mean(points3)) %>% arrange(avg3point) %>% slice(1:5)
+
+nba %>% filter(position == 'PG') %>% filter(experience == 5 | experience == 10) %>% 
+  summarise(avg_age = mean(age), sd_age = sd(age))
+```

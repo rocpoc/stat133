@@ -1,0 +1,321 @@
+---
+title: "Lab 08"
+output: html_document
+author: ""
+date: "10/17/2018"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+```
+
+```{r}
+vec <- c(1, 2, 3, 4, 5) 
+for (j in 1:length(vec)) {
+  vec[j] = 3*vec[j]
+}
+
+vec <- c(1, 2, 3, 4, 5)  
+vec2 <- rep(0, length(vec)) 
+for (j in 1:length(vec)) {
+  vec[j] = 2*vec[j]
+  vec2[j] = vec[j]
+  print(vec2[j])
+}
+```
+
+```{r}
+n = 100
+two_k_list = rep(0, n+1)
+nine_k_list = rep(0, n+1)
+for (k in 0:n) {
+  two_k_list[k+1] = 1 / 2^k
+  nine_k_list[k+1] = 1/9^k
+  }
+two_k_list # Yes, the series converges as n increasses
+nine_k_list # Yes, the series converges  
+
+
+n = 500
+two_k_list = rep(0, n+1)
+nine_k_list = rep(0, n+1)
+for (k in 0:n) {
+  two_k_list[k+1] = 1 / 2^k
+  nine_k_list[k+1] = 1/9^k
+  }
+# Again, the series converge as n increases
+```
+
+```{r}
+n = 10
+arithmetic_list = rep(0, n)
+for (i in 1:n) {
+  arithmetic_list[i] = 3 + (i-1)*3
+  }
+arithmetic_list # the series is convergent as n increases
+
+n = 100
+arithmetic_list = rep(0, n)
+for (i in 1:n) {
+  arithmetic_list[i] = 3 + (i-1)*3
+  }
+arithmetic_list # again, the series is convergent as n increases
+```
+
+```{r}
+n = 5
+geo_list = rep(0, n)
+for (i in 0:n) {
+  geo_list[i] = 3  * 2^(i-1)
+}
+geo_list
+
+n = 20
+geo_list = rep(0, n)
+for (i in 0:n) {
+  geo_list[i] = 3  * 2^(i-1)
+}
+geo_list # yes, the series converges as n increases
+```
+
+```{r}
+s_sum = 0
+x = 1
+n = 5
+for(i in 0:n) {
+  s_sum = s_sum + ((-1)^(i) * (x^(2*i+1)/factorial(2*i+1)))
+}
+s_sum 
+sin(1)
+```
+
+```{r}
+set.seed(123)
+X <- matrix(rnorm(12), nrow = 4, ncol = 3)
+Y <- matrix(NA, nrow = 4, ncol = 3)
+for(i in 1:nrow(X)) {
+  for(j in 1:ncol(X)) {
+    if(X[i, j] < 0) {
+      Y[i,j] = (X[i,j])^2
+    }
+    if(X[i, j] > 0) {
+      Y[i,j] = sqrt(X[i,j])
+    }
+  }
+}
+Y
+```
+
+```{r}
+# your reduce() function
+reduce <- function(x) {
+  while (x %% 2 == 0) { 
+    x = x / 2
+    print(x)
+  }
+}
+reduce(898128000)
+```
+
+```{r}
+# average
+x = 1:100
+#for loop
+n = length(x)
+xi = 0
+# 
+for (i in 1:n) {
+  xi = (xi + i)
+}
+mean = 1/n  * xi
+mean
+
+# while loop
+xi = 0
+i = 0
+while (i <= n) {
+  xi = (xi + i)
+  i = i + 1
+}
+mean = 1/n  * xi
+mean
+
+# repeat loop
+xi = 0
+i = 0
+repeat {
+  if (i>n) { 
+    break                 
+  }
+  xi = (xi + i)
+  i = i + 1
+}
+mean = 1/n  * xi
+mean
+```
+
+```{r}
+# SD
+x = 1:100
+n = length(x)
+seq_ = seq(0, n)
+sd = 0
+for (i in 1:n) {
+  seq_[i] =  (i - mean(x))^2
+}
+for (i in 1:n) {
+  sd = sd + (1/(n-1) * seq_[i])
+}
+sd = sqrt(sd)
+sd
+
+# while
+x = 1:100
+n = length(x)
+seq_ = seq(0, n)
+sd = 0
+i = 1
+while (i <= n) {
+  seq_[i] =  (i - mean(x))^2
+  i = i+1
+}
+i=1
+while(i <= n) {
+  sd = sd + (1/(n-1) * seq_[i])
+  i = i+1
+}
+sd = sqrt(sd)
+sd
+
+#repeat
+x = 1:100
+n = length(x)
+seq_ = seq(0, n)
+sd = 0
+i = 1
+repeat {
+  if (i>n) { 
+    break              
+  }
+  seq_[i] =  (i - mean(x))^2
+  i = i+1
+}
+i = 1
+repeat {
+  if (i>n) { 
+    break              
+  }
+  sd = sd + (1/(n-1) * seq_[i])
+  i = i+1
+}
+sd = sqrt(sd)
+sd
+```
+
+```{r}
+# Geometric Mean
+x = 1:50
+n = length(x)
+gm = 1
+for(i in 1:n) {
+  gm = i * gm
+}
+gm = gm^(1/n)
+gm
+
+#while
+gm = 1
+i = 1
+while(i <= n) {
+  gm = i * gm
+  i = i+1
+}
+gm = gm^(1/n)
+gm
+
+#repeat
+gm = 1
+i = 1
+repeat {
+  if(i > n) {
+    break
+  }
+  gm = i * gm
+  i = i+1
+}
+gm = gm^(1/n)
+gm
+```
+
+```{r}
+# random distance matrix
+num_letters <- length(LETTERS)
+set.seed(123)
+values <- sample.int(num_letters) 
+distances <- values %*% t(values)
+diag(distances) <- 0
+dimnames(distances) <- list(LETTERS, LETTERS)
+
+#' @title Get Distance
+#' @description computes the 'distance' of the ltrs
+#' @param distances the matrix of distance among letters.
+#' @param ltrs a character vector of upper case letters.
+#' @return a numeric value with the total distance.
+get_dist = function(distances, ltrs) {
+  for(i in 1:length(ltrs)) {
+      if (ltrs[i] %in% row.names(distances) == FALSE) {
+        stop("Unrecognized character")}
+  }
+  distance_list = 0
+  for(i in 1:length(ltrs)) {
+    for(j in i+1:length(ltrs)) {
+        if (i == length(ltrs)) {
+          break
+        }
+        distance_list = distance_list + distances[ltrs[i], ltrs[j]]
+        break
+      }
+    }
+  return(distance_list)
+}
+
+vec <- c('E', 'D', 'A')
+get_dist(distances, vec)
+
+#error
+err <- c('E', 'D', ')')
+get_dist(distances, err)
+
+
+cal <- c('C', 'A', 'L')
+stats <- c('S', 'T', 'A', 'T', 'S')
+oski <- c('O', 'S', 'K', 'I')
+zzz <- rep('Z', 3)
+first <- c("R", "O", "C", "K", "Y")
+last <- c("L", "U", "B", "B", "E", "R", "S")
+
+strings <- list(
+  cal = cal,
+  stats = stats,
+  oski = oski,
+  zzz = zzz,
+  first = first,
+  last = last
+)
+
+strings_dists = list(
+  cal = 0, 
+  stats = 0,
+  oski = 0, 
+  zzz = 0, 
+  first = 0,
+  last = 0
+)
+
+i=1
+for(str in strings) {
+  strings_dists[i] = get_dist(distances, str)
+  i = i+1
+}
+strings_dists #includes all the distances for said letters!
+```

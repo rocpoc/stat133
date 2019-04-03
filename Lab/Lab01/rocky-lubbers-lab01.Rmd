@@ -1,0 +1,100 @@
+---
+title: "Lab 01"
+author: "Stat 133, Fall 2018, Rocky Lubbers"
+date: 8/29/18
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Expenses
+```{r}
+phone <- 80
+groceries <- 527
+transportation <- 20
+gym <- 10
+rent <- 1500
+other <- 83
+total <- groceries + gym + other + phone + rent + transportation
+total
+semester <- total * 5
+semester
+year <- total * 10
+year
+expenses <- c(phone, transportation, groceries, gym, rent, other)
+expenses <- sort(expenses, decreasing=TRUE)
+name <- c('rent', 'groceries', 'other', 'phone', 'transport', 'gym')
+barplot(expenses, names.arg = name)
+```
+
+## Pythagoras Formula
+```{r}
+c = sqrt(3^2 + 4^2)
+n = 5
+k = 2
+p = 0.5
+n_choose_k <- factorial(n)/(factorial(k)*factorial(n-k))
+binomial <- n_choose_k * p^k * (1-p)^(n-k)
+binomial
+binomial <- choose(n,k) * p^k * (1-p)^(n-k)
+binomial
+three_sixes <- choose(10,3)*(1/6)^3 * (1-(1/6))^(10-3)
+three_sixes
+help.search("binomial")
+twohead_5toss <- dbinom(2, 5, 1/2, log = FALSE)
+twohead_5toss
+threesix_threeroll <- dbinom(3, 3, 1/6, log = FALSE)
+threesix_threeroll
+twohead_5toss_newp <- dbinom(2, 5, 0.35, log = FALSE)
+twohead_5toss_newp
+morethanthree <- dbinom(4, 5, 0.35, log = FALSE) + dbinom(5, 5, 0.35, log = FALSE)
+morethanthree
+```
+
+## Installing Packages
+```{r}
+options(repos="https://cran.rstudio.com" )
+install.packages("stringr")
+install.packages("RColorBrewer")
+install.packages("XML")
+x <- 2
+3*x^2 + 4*x + 8
+x <- -3:3
+3*x^2 + 4*x + 8
+help("+")
+help("-")
+```
+**Files** is food for viewing and organizing documents, like datasets, etc.  
+**Help** is good for viewing documentation and all resources needed for R and RStudio.  
+When you click the *house* icon, it sends you back to the home page of all the help menu.  
+**History** is good for looking at all the things you have typed into the console without the outputs, and the "To Source" and "To Console" are used for copying the history to the document and console, respectively.  
+The **Evironment** Tab is good for seeing all the stored variables and their associated values in an easy-to-read format. 
+
+
+## Review Questions
+```{r}
+# Example1
+# output: Error due to Var being capitalized
+
+# Example 2
+# output: Error with the symbol 2x
+
+# Example 3
+# output: 2
+
+# Example 4
+# output: Error because of space between "a number"
+
+# Example 5
+# output: 16
+# output: Error because of the space again (it is not a string)
+
+```
+
+## RStudio working environment
+The Source pane is used for viewing and editing your files such as scipts, notebooks, and markdown sheets.  
+The Console pane is used for interacting with R, and viewing the outputs of the commands you enter in.  
+The Environment, History, Connections pane has a few uses, like keeping track of your environment variables you declared in the console, seeing all of the previously entered in commands into the console, and I believe setting up conenctions to remote databases or servers.  
+The Files, Plots, Packages, Help, Viewer pane is used for browsing your files on disk, viewing the plots you've created, seeing/installing new packages, documentation. 
