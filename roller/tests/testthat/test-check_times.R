@@ -1,0 +1,15 @@
+context("Test check_times")
+
+test_that("check_times works as intended & throws errors correctly", {
+  defualt_die = device()
+  roller = roll(defualt_die)
+  die1 = device(sides = c('a', 'b', 'c', 'd', 'e'), prob = rep(1/5, 5))
+  die2 = device(sides = c(1, 4, 9, 8), prob = rep(1/4, 4))
+  roll_1 = roll(die1, times = 10)
+  roll_2 = roll(die2, times = 20)
+  expect_equal(roll_1$total, 10)
+  expect_equal(roll_2$total, 20)
+  expect_error(roll(die1, "5 times"), "'times' is not integer")
+  expect_error(roll(die2, 0), "'times' is not a positive integer")
+  expect_equal(roll_2$side, c(1, 4, 9, 8))
+})

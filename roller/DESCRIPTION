@@ -1,0 +1,19 @@
+Package: roller
+Type: Package
+Title: Rolling a created Device
+Version: 0.1.0
+Author: Rocky Lubbers
+Maintainer: Rocky Lubbers <rockylubbers@berkeley.edu>
+Description: This package contains functions simulating rolling a device.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Collate:
+    device.R
+    rolls.R
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+

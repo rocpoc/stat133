@@ -1,0 +1,5 @@
+"0","die <- device(sides = 1:6, prob = rep(1/6, 6))"
+"0","die"
+"1","object ""device""
+
+"

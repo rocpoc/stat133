@@ -1,0 +1,98 @@
+---
+title: "Introduction to the Roller Package"
+author: "Rocky Lubbers"
+date: "11/29/18"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the Roller Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(roller)
+```
+
+
+## Rolling
+
+The `"roller"` package is used for creating a device with a certain number
+of sides and corresponding probabilities, rolling the device a set number 
+of times, and visualizing the frequencies of the rolls in the series. 
+
+
+## Creating a `device`
+
+Step 1: create a `"device"` object with the function `device()`:
+
+```{r}
+default_device <- device()
+default_device
+```
+
+By default, `device()` creates a device with two sides (1, 2), 
+and probabilties for each side corresponding to 0.5. The default 
+constructor in a sense makes a fair coin ready to be 'rolled'.
+
+That being said, if you want to add more sides or different probabilities, 
+you can do that by changing the defatuls with arguments `sides` and `prob`:
+
+```{r}
+die <- device(sides = 1:6, prob = rep(1/6, 6))
+die
+```
+
+You can easily created a loaded die like the following:
+
+```{r}
+loaded_die <- device(sides = 1:6, prob = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.5))
+loaded_die
+```
+
+
+
+## Rolling a device
+
+Step 2: After you have created your device object ready to be rolled, you will
+use the `roll()` function to do so. The `roll()` function takes in arguments
+`device` and `times`, in which you put in your created device and roll it the
+amount of `times` you want (by default set to 1). The output is of the class 
+`rolls`, and contains a list consisting of the rolls, the sides and probabilities 
+of the device, and the total rolls (which is the number of `times` inputted). 
+
+When printed, the output shows the class and the vector of rolls:
+
+```{r}
+roll10 <- roll(die, times = 10)
+roll10
+```
+
+
+Example - roll the loaded die 10 times:
+
+```{r}
+loaded_roll10 <- roll(loaded_die, times = 10)
+loaded_roll10
+```
+
+You can easily check all the attributes of the roll device with the `summary()`
+function, easily displayed in a dataframe for convenience:
+
+```{r}
+summary(loaded_roll10)
+```
+
+
+
+## Plot the Frequencies
+
+The function `plot()` can be used on the roll object to create a graphic
+representation of the relative frequencies:
+
+```{r}
+plot(roll10)
+```
+
+

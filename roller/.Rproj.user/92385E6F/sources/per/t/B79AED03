@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1543430518198.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1538568354",
+    "id" : "B79AED03",
+    "lastKnownWriteTime" : 1543537461,
+    "last_content_update" : 1544037133415,
+    "path" : "~/Desktop/STAT133/hw-stat133/roller/tests/testthat.R",
+    "project_path" : "tests/testthat.R",
+    "properties" : {
+        "cursorPosition" : "3,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

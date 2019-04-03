@@ -1,0 +1,9 @@
+"0","flip_coin <- roll(biased_coin) # flip 1 time (default is 1)"
+"0","flip_coin"
+"1","object ""rolls""
+
+"
+"1","[1]"
+"1"," 2"
+"1","
+"

@@ -1,0 +1,1 @@
+"0","die_75 <- device(sides = 1:75, prob = rep(1/75, 75))"

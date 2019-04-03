@@ -1,0 +1,80 @@
+---
+title: "README"
+output:
+  github_document:
+    html_preview: false
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+## Overview
+
+"Roller" is an R package that is used for creating devices
+with programmable amounts of sides and probabilities, as well as
+rolling the devices and visualizing the frequencies of the rolls.
+It provides the following functions:
+
+* `device()` creates a device object (of class `"device"`).
+* `roll()` to roll a device object, creating a `"rolls"` object.
+* `plot()` method for a `"roll"` object to plot frequencies of a series of rolls.
+* `summary()` method for a `"roll"` object.
+
+
+## Motivation
+
+The motivation for this project was to learn how to create and
+operate building an entire R package.
+
+
+## Installation
+
+Install the development version from GitHub via the package `"devtools"`:
+
+```r
+# install.packages("devtools") 
+# install "cointoss" (without vignettes)
+devtools::install_github("rocpoc/roller")
+# install "cointoss" (with vignettes)
+devtools::install_github("rocpoc/roller", build_vignettes = TRUE)
+```
+
+
+## Usage
+```{r}
+library(roller)
+
+# default device
+default_device = device()
+default_device
+
+# default roll the default device
+default_roll = roll(default_device)
+default_roll
+
+
+# create fair die device
+die = device(sides = 1:6, prob = rep(1/6, 6))
+die
+
+# roll the die 5 times or 100 times
+die_roll5 = roll(die, 5)
+die_roll100 = roll(die, 100)
+
+die_roll5
+die_roll100
+```
+
+```{r}
+# summary of the 5 roll
+summary.rolls(die_roll5)
+
+# summary of the 100 roll
+summary.rolls(die_roll100)
+```
+

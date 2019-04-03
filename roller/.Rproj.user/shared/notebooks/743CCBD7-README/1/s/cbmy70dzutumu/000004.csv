@@ -1,0 +1,16 @@
+"0","# default roll the default device"
+"0","default_roll = roll(default_device)"
+"0","default_roll"
+"1","object ""rolls""
+
+"
+"1","[1]"
+"1"," 1"
+"1","
+"
+"0","# create fair die device"
+"0","die = device(sides = 1:6, prob = rep(1/6, 6))"
+"0","die"
+"1","object ""device""
+
+"
