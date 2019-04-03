@@ -1,0 +1,16 @@
+# Workout 01  
+*Rocky Lubbers, 10/3/2018*
+
+-----
+
+This assignment uses NBA data from the 2018 season to perform data analysis, processing, and plotting. Inside the code folder is an R script files to perform data preperation and processing. The data folder includes the dataset, data dictionary, and an adapted nba teams csv file. The output folder includes two text files that are outputted from the R script file. Lastly, the report folder contains an analysis of some of the data and their associated bar charts.
+
+
+## File Structure
+
+- code
+- data
+- output
+- report
+
+
