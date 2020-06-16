@@ -1,4 +1,4 @@
-# Stat 133, Fall 2018
+# Stat 133 - Concepts in Computing with Data
 Repository for HW assignments of Stat 133 (Fall 2018)
 -----
 
